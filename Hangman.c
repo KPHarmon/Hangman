@@ -13,6 +13,7 @@ int options();
 int help();
 int quit();
 int counterLives = 8;
+char difficulty[7] = "MEDIUM";
     
 int main(void)
 {
@@ -93,17 +94,20 @@ int playerTwo(void)
         //lives updater
         printf(" LIVES: %d", counterLives);
         printf("\n\n");
-        //blanks updater
+        
+        //updates blanks per guess
         for(i = 0; i < wordSize; i++)
         {
             printf(" %c", blanks[i]);
         }
-        //guesses tracker
+        
+        //updates wrong guesses
         printf("\n\nWRONG GUESSES:\n");
         for(i = 0; i < 9; i++)
         {
             printf(" %c", wrongChars[i]);
         }
+        
         //input letter, check to see if input character matches word, if not, take away life
         printf("\n\nGUESS A LETTER\n");
         scanf(" %c", &guess);
@@ -123,6 +127,8 @@ int playerTwo(void)
             wrongChars[j] = guess;
             j++; 
         }
+        
+        //if player runs out of lives, end game
         if(counterLives == 0)
         {
             printf("\n\n\nYOU LOSE\n\n\nTYPE '1' TO PLAY AGAIN\nTYPE '2' TO RETURN TO MAIN MENU\n");
@@ -142,21 +148,24 @@ int playerTwo(void)
         }
         if(counter == wordSize)
         {
+            //changes blank to character if the word contains the guess
             system("cls");
             printf(" LIVES: %d\n\n", counterLives);
             for(i = 0; i < wordSize; i++)
             {
                  printf(" %c", blanks[i]);
             }
-            //guesses tracker
+            
+            //Tracks guesses
             printf("\n\nWRONG GUESSES:\n");
             for(i = 0; i < 9; i++)
             {
                 printf(" %c", wrongChars[i]);
             }
             
+            //prints "You Win" many times 
             printf("\n\n");
-            for(i=0; i<130; i++)
+            for(i=0; i<100; i++)
             {
                 printf("YOUWIN\t");
             }
@@ -182,7 +191,6 @@ int playerTwo(void)
 int options(void)
 {
     int inputDiff;
-    char difficulty[7] = "MEDIUM";
     system("cls");
     printf("DIFFICULTY OPTIONS:\n");
     printf("PRESS '1' FOR EASY DIFFICULTY\n");
@@ -190,27 +198,33 @@ int options(void)
     printf("PRESS '3' FOR HARD DIFFICULTY\n");
     printf("PRESS '4' TO RETURN TO THE MAIN MENU\n");
     printf("\n\n\n\nCURRENT DIFFICULTY SETTING: %s\n", difficulty);
-    scanf("%d", inputDiff);
+    
+    //Take input, depending on input, change value of counterLives
+    scanf("%d", &inputDiff);
     switch(inputDiff)
     {
         case 1:
             strcpy(difficulty, "EASY");
             counterLives = 11;
+            options();
             break;
         case 2:
             strcpy(difficulty, "MEDIUM");
             counterLives = 8;
+            options();
             break;
         case 3:
             strcpy(difficulty, "HARD");
             counterLives = 6;
+            options();
             break;
         case 4:
             main();
             break;
         default:
-            printf("Choose a difficult setting.");
+            printf("Choose a difficulty setting.");
             options();
+            break;
     }
 }
 
@@ -220,13 +234,18 @@ int help(void)
     inputChar = getchar();
     system("cls");
     printf("\n\n - Play individually or in a group.\n\n - If playing in a group, select a word (don't let others see it!).\n\n - Type a letter you think will be found in the word.\n\n - Continue until the word is correctly guessed or you run out of lives!\n\n\n\n\n\n\n*Type a Letter to Return to the Main Menu*\n\n\n\n\n\n\n\n");
+
+    //if input is a character, return to menu
     scanf(" %c", &inputChar);
     if(inputChar >= 'a' && inputChar <= 'z' || inputChar >= 'A' && inputChar <= 'Z')
     {
         main();
     }
 }
+
 int quit(void)
 {
+    
+    //exit program
     return 0;
 }
