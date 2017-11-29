@@ -13,6 +13,8 @@ int options();
 int help();
 int quit();
 int counterLives = 8;
+char difficulty[7] = "MEDIUM";
+int persisLives;
     
 int main(void)
 {
@@ -36,15 +38,16 @@ int main(void)
             break;
         default:
             printf("\nCHOOSE 1, 2, 3, OR 4\n");
-            return 0;
+            break;
     }
 }
 
+//mAIN MENU FOR THE GAME
 int game(void)
 {
     int countPlayer;
     system("cls");
-    printf("\n1:  ONE PLAYER\n2:  TWO+ PLAYERS\n");
+    printf("\n1:  SINGLE PLAYER\n2:  TWO+ PLAYERS\n3:  MAIN MENU\n");
     scanf("%d", &countPlayer);
     switch(countPlayer)
     {
@@ -54,23 +57,146 @@ int game(void)
         case 2:
             playerTwo();
             break;
+        case 3:
+            main();
+            break;
         default:
             printf("\nCHOOSE 1 OR 2\n");
-            break;
+            game();
     }
 }
 
 int playerOne(void)
 {
+    system("cls");
+    int wordSize, i, j=0, input, counter = 0, rngNum;
+    char wordOne[30], blanks[30], guess, wrongChars[9];
+    persisLives = counterLives;
+    //COLLECTING STRING FROM TXT FILE
+    srand((int)time(NULL));
+    int count = 0;
+    FILE *file = fopen("listCountries.txt", "r");   
+    char line[40];
+    while(fgets(line, sizeof line, file) != NULL)
+    {
+        count++;
+        if((rand() * count) / RAND_MAX == 0)
+        {
+            // reads text until newline
+            fscanf(file, "%[^\n]", wordOne);
+        }
+    } 
+    fclose(file);
     
+    wordSize = strlen(wordOne);
+
+    //INITIALIZING ARRAY
+    for(i = 0; i < wordSize; i++)
+    {
+        blanks[i] = '_';  
+    } 
+    for(i = 0; i < 9; i++)
+    {
+        wrongChars[i] = '\0';
+    }
+    
+    //MAIN INTERFACE FOR PLAYER1 GAME
+    while(persisLives > 0)
+    {
+        int flag = 0;
+        system("cls");
+        //lives updater
+        printf(" LIVES: %d", persisLives);
+        printf("\n\n");
+        //blanks updater
+        for(i = 0; i < wordSize; i++)
+        {
+            printf(" %c", blanks[i]);
+        }
+        //guesses tracker
+        printf("\n\nWRONG GUESSES:\n");
+        for(i = 0; i < 9; i++)
+        {
+            printf(" %c", wrongChars[i]);
+        }
+        
+        //input letter, check to see if input character matches word, if not, take away life
+        printf("\n\nGUESS A LETTER\n");
+        scanf(" %c", &guess);
+        for(i=0; i<wordSize; i++)
+        {
+            if(wordOne[i] == guess)
+            {
+                printf("\a");
+                blanks[i] = guess;
+                counter++;
+                flag = 1;
+            }
+        }
+        if(flag == 0)
+        {
+            persisLives--;
+            wrongChars[j] = guess;
+            j++; 
+        }
+        if(persisLives == 0)
+        {
+            printf("\n\n\nYOU LOSE, THE CORRECT ANSWER IS %s\n\n\nTYPE '1' TO PLAY AGAIN\nTYPE '2' TO RETURN TO MAIN MENU\n", wordOne);
+            scanf(" %d", &input);
+            switch(input)
+            {
+                case 1:
+                    playerOne();
+                    break;
+                case 2:
+                    main();
+                    break;
+                default:
+                    printf("PICK '1' OR '2'");
+                    break;
+            }
+        }
+        if(counter == wordSize)
+        {
+            system("cls");
+            printf(" LIVES: %d\n\n", persisLives);
+            for(i = 0; i < wordSize; i++)
+            {
+                 printf(" %c", blanks[i]);
+            }
+            //guesses tracker
+            printf("\n\nWRONG GUESSES:\n");
+            for(i = 0; i < 9; i++)
+            {
+                printf(" %c", wrongChars[i]);
+            }
+            
+            printf("\n\nYOU WIN!");
+
+            printf("\n\nTYPE '1' TO PLAY AGAIN\nTYPE '2' TO RETURN TO MAIN MENU\n");
+            scanf(" %d", &input);
+            switch(input)
+            {
+                case 1:
+                    playerOne();
+                    break;
+                case 2:
+                    main();
+                    break;
+                default:
+                    printf("PICK '1' OR '2'");
+                    break;
+            }
+        }
+    }
 }
 
-//Can add spaces, traverse inputted string for space, if it finds a space, save the position, and pass i != (posiion) in middle part of for loop, make nothing instead
 int playerTwo(void)
 {
     system("cls");
     int wordSize, i, j=0, input, counter = 0;
     char wordTwo[30], blanks[30], guess, wrongChars[9];
+    int persisLives = counterLives;
     printf("\nPLAYER ONE: TYPE ONE WORD (MAKE SURE CAPS IS ON)\n\nDONT LET THE OTHERS SEE IT!\n");
     scanf("%s", &wordTwo);
     wordSize = strlen(wordTwo);
@@ -86,12 +212,12 @@ int playerTwo(void)
     }
     
     //MAIN INTERFACE FOR PLAYER2 GAME
-    while(counterLives > 0)
+    while(persisLives > 0)
     {
         int flag = 0;
         system("cls");
         //lives updater
-        printf(" LIVES: %d", counterLives);
+        printf(" LIVES: %d", persisLives);
         printf("\n\n");
         //blanks updater
         for(i = 0; i < wordSize; i++)
@@ -119,13 +245,13 @@ int playerTwo(void)
         }
         if(flag == 0)
         {
-            counterLives--;
+            persisLives--;
             wrongChars[j] = guess;
             j++; 
         }
-        if(counterLives == 0)
+        if(persisLives == 0)
         {
-            printf("\n\n\nYOU LOSE\n\n\nTYPE '1' TO PLAY AGAIN\nTYPE '2' TO RETURN TO MAIN MENU\n");
+            printf("\n\n\nYOU LOSE, THE CORRECT ANSWER IS %s\n\n\nTYPE '1' TO PLAY AGAIN\nTYPE '2' TO RETURN TO MAIN MENU\n", wordTwo);
             scanf(" %d", &input);
             switch(input)
             {
@@ -136,14 +262,14 @@ int playerTwo(void)
                     main();
                     break;
                 default:
-                    printf("PICK '1' OR '2'");
+                    printf("YOU CAN ONLY PICK '1' OR '2'");
                     break;
             }
         }
-        if(counter == wordSize)
+        if(persisLives == wordSize)
         {
             system("cls");
-            printf(" LIVES: %d\n\n", counterLives);
+            printf(" LIVES: %d\n\n", persisLives);
             for(i = 0; i < wordSize; i++)
             {
                  printf(" %c", blanks[i]);
@@ -155,11 +281,7 @@ int playerTwo(void)
                 printf(" %c", wrongChars[i]);
             }
             
-            printf("\n\n");
-            for(i=0; i<130; i++)
-            {
-                printf("YOUWIN\t");
-            }
+            printf("\n\nYOU WIN!");
 
             printf("\n\nTYPE '1' TO PLAY AGAIN\nTYPE '2' TO RETURN TO MAIN MENU\n");
             scanf(" %d", &input);
@@ -172,7 +294,7 @@ int playerTwo(void)
                     main();
                     break;
                 default:
-                    printf("PICK '1' OR '2'");
+                    printf("YOU CAN ONLY PICK '1' OR '2'");
                     break;
             }
         }
@@ -182,7 +304,6 @@ int playerTwo(void)
 int options(void)
 {
     int inputDiff;
-    char difficulty[7] = "MEDIUM";
     system("cls");
     printf("DIFFICULTY OPTIONS:\n");
     printf("PRESS '1' FOR EASY DIFFICULTY\n");
@@ -190,20 +311,24 @@ int options(void)
     printf("PRESS '3' FOR HARD DIFFICULTY\n");
     printf("PRESS '4' TO RETURN TO THE MAIN MENU\n");
     printf("\n\n\n\nCURRENT DIFFICULTY SETTING: %s\n", difficulty);
-    scanf("%d", inputDiff);
+    scanf("%d", &inputDiff);
     switch(inputDiff)
     {
         case 1:
             strcpy(difficulty, "EASY");
             counterLives = 11;
+            persisLives = counterLives;
+            options();
             break;
         case 2:
             strcpy(difficulty, "MEDIUM");
             counterLives = 8;
+            options();
             break;
         case 3:
             strcpy(difficulty, "HARD");
             counterLives = 6;
+            options();
             break;
         case 4:
             main();
@@ -219,7 +344,7 @@ int help(void)
     char inputChar;
     inputChar = getchar();
     system("cls");
-    printf("\n\n - Play individually or in a group.\n\n - If playing in a group, select a word (don't let others see it!).\n\n - Type a letter you think will be found in the word.\n\n - Continue until the word is correctly guessed or you run out of lives!\n\n\n\n\n\n\n*Type a Letter to Return to the Main Menu*\n\n\n\n\n\n\n\n");
+    printf("\n\n - PLAY INDIVIDUALLY OR IN A GROUP.\n\n - IF PLAYING IN A GROUP, SELECT A WORD (DON'T LET OTHERS SEE IT!).\n\n - TYPE A LETTER YOU THINK WILL BE FOUND IN THE WORD.\n\n - CONTINUE UNTIL THE WORD IS CORRECTLY GUESSED OR YOU RUN OUT OF LIVES!\n\n\n\n\n\n\n*TYPE A LETTER TO RETURN TO THE MAIN MENU*\n\n\n\n\n\n\n\n");
     scanf(" %c", &inputChar);
     if(inputChar >= 'a' && inputChar <= 'z' || inputChar >= 'A' && inputChar <= 'Z')
     {
