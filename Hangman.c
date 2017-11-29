@@ -69,13 +69,26 @@ int game(void)
 int playerOne(void)
 {
     system("cls");
-    int wordSize, i, j=0, input, counter = 0, rngNum;
+    int wordSize, i, j=0, input, counter = 0, catInput;
     char wordOne[30], blanks[30], guess, wrongChars[9];
-    persisLives = counterLives;
     //COLLECTING STRING FROM TXT FILE
     srand((int)time(NULL));
     int count = 0;
-    FILE *file = fopen("listCountries.txt", "r");   
+    printf("CHOOSE A CATEGORY:\n:1.  Countries\n");
+    scanf("%d", &catInput);
+    switch(catInput)
+    {
+        case 1:
+            FILE *file = fopen("listCountries.txt", "r");
+            break;
+        case 2:
+            FILE *file = fopen("listCountries.txt", "r");
+            break;
+        default:
+            printf("YOU MUST CHOOSE A CATEGORY.");
+            playerOne();
+            break;
+    }   
     char line[40];
     while(fgets(line, sizeof line, file) != NULL)
     {
@@ -89,7 +102,7 @@ int playerOne(void)
     fclose(file);
     
     wordSize = strlen(wordOne);
-
+    persisLives = counterLives;
     //INITIALIZING ARRAY
     for(i = 0; i < wordSize; i++)
     {
