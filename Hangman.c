@@ -69,7 +69,7 @@ int game(void)
 int playerOne(void)
 {
     system("cls");
-    int wordSize, i, j=0, input, counter = 0, catInput;
+    int wordSize, i, j=0, input, counter = 0, catInput, calibrate = 0;
     char wordOne[30], blanks[30], guess, wrongChars[9];
     
     //COLLECTING STRING FROM TXT FILE
@@ -95,7 +95,12 @@ int playerOne(void)
     //INITIALIZING ARRAY
     for(i = 0; i < wordSize; i++)
     {
-        blanks[i] = '_';  
+        blanks[i] = '_';
+        if(wordOne[i] == ' ')
+        {
+            blanks[i] = '/';
+            calibrate++;
+        }
     } 
     for(i = 0; i < 9; i++)
     {
@@ -158,7 +163,7 @@ int playerOne(void)
                     break;
             }
         }
-        if(counter == wordSize)
+        if(counter+calibrate == wordSize)
         {
             system("cls");
             printf(" LIVES: %d\n\n", persisLives);
