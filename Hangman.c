@@ -12,9 +12,13 @@ int playerTwo();
 int options();
 int help();
 int quit();
+int countries();
+int movies();
+int books();
 int counterLives = 8;
 char difficulty[7] = "MEDIUM";
 int persisLives;
+FILE *file;
     
 int main(void)
 {
@@ -71,18 +75,38 @@ int playerOne(void)
     system("cls");
     int wordSize, i, j=0, input, counter = 0, catInput, calibrate = 0;
     char wordOne[30], blanks[30], guess, wrongChars[9];
-    
     //COLLECTING STRING FROM TXT FILE
     srand((int)time(NULL));
     int count = 0;
-
-    FILE *file = fopen("listCountries.txt", "r");   
-    
+    printf("CHOOSE A CATEGORY:\n");
+    printf("1.  COUNTRIES\n");
+    printf("2.  MOVIES\n");
+    printf("3.  BOOKS\n");
+    printf("9.  PLAYER SELECTION\n");
+    scanf("%d", &catInput);
+    switch(catInput)
+    {
+        case 1:
+            countries();
+            break;
+        case 2:
+            movies();
+            break;
+        case 3:
+            books();
+            break;
+        case 9:
+            game();
+            break;
+        dafault:
+            main();
+            break;
+    }
     char line[40];
     while(fgets(line, sizeof line, file) != NULL)
     {
         count++;
-        if((rand() * count) / RAND_MAX == 0)
+        if(rand() * count / RAND_MAX == 0)
         {
             // reads text until newline
             fscanf(file, "%[^\n]", wordOne);
@@ -273,7 +297,7 @@ int playerTwo(void)
                     break;
             }
         }
-        if(persisLives == wordSize)
+        if(counter == wordSize)
         {
             system("cls");
             printf(" LIVES: %d\n\n", persisLives);
@@ -358,7 +382,21 @@ int help(void)
         main();
     }
 }
+
 int quit(void)
 {
     return 0;
+}
+
+int countries(void)
+{
+    file = fopen("listCountries.txt", "r");
+}
+int movies(void)
+{
+    file = fopen("listMovies.txt", "r");
+}
+int books(void)
+{
+    file = fopen("listBooks.txt", "r");
 }
