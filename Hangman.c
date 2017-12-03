@@ -106,7 +106,7 @@ int playerOne(void)
     while(fgets(line, sizeof line, file) != NULL)
     {
         count++;
-        if(rand() * count / RAND_MAX == 0)
+        if ((rand() / (float)RAND_MAX) <= (1.0 / count)) 
         {
             // reads text until newline
             fscanf(file, "%[^\n]", wordOne);
@@ -375,7 +375,7 @@ int help(void)
     char inputChar;
     inputChar = getchar();
     system("cls");
-    printf("\n\n - PLAY INDIVIDUALLY OR IN A GROUP.\n\n - IF PLAYING IN A GROUP, SELECT A WORD (DON'T LET OTHERS SEE IT!).\n\n - TYPE A LETTER YOU THINK WILL BE FOUND IN THE WORD.\n\n - CONTINUE UNTIL THE WORD IS CORRECTLY GUESSED OR YOU RUN OUT OF LIVES!\n\n\n\n\n\n\n*TYPE A LETTER TO RETURN TO THE MAIN MENU*\n\n\n\n\n\n\n\n");
+    printf("\nHELP MENU:\n\n - PLAY INDIVIDUALLY OR IN A GROUP.\n\n - IF PLAYING IN A GROUP, SELECT A WORD (DON'T LET OTHERS SEE IT!).\n\n - TYPE A LETTER YOU THINK WILL BE FOUND IN THE WORD (REMEMBER TO IGNORE PUNCTUATION MARKS).\n\n - CONTINUE UNTIL THE WORD IS CORRECTLY GUESSED OR YOU RUN OUT OF LIVES!\n\n\n\n*TYPE A LETTER TO RETURN TO THE MAIN MENU*\n");
     scanf(" %c", &inputChar);
     if(inputChar >= 'a' && inputChar <= 'z' || inputChar >= 'A' && inputChar <= 'Z')
     {
