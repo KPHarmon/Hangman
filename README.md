@@ -1,10 +1,10 @@
 # Hangman
-Hangman game constrcuted using the C programming language.
+Classic Hangman game constructed using the C programming language.
 
 Complete with
 •menus
 •difficult settings
-•6+ categories
+•8 categories
 •single player and multiplayer support
 
 
@@ -23,5 +23,4 @@ Complete with
     0
     0
     0
-    0   0   0   0   0   0 
-    
+    0 
