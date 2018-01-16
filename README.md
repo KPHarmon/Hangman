@@ -2,10 +2,7 @@
 Classic Hangman game constructed using the C programming language.
 
 Complete with
-•menus
-•difficult settings
-•8 categories
-•single player and multiplayer support
+single player•multiplayer•3 difficulty settings•8 categories
 
 
     0000000000000
