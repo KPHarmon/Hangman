@@ -5,7 +5,7 @@
 #include <conio.h>
 #include <string.h>
 #include <assert.h>
-#define TRASH_LENGTH 1024
+#define LINE_LENGTH 1024
 
 //Initialize functions
 int main();
@@ -163,10 +163,10 @@ int playerOne(void)
     }
     else 
     {
-        char trash[TRASH_LENGTH];
-        while((p = fgets(trash, TRASH_LENGTH, file)) != NULL) 
+        char linebuff[LINE_LENGTH];
+        while((p = fgets(linebuff, LINE_LENGTH, file)) != NULL) 
         {
-            if ((p = strchr(trash, '\n')) != NULL)
+            if ((p = strchr(linebuff, '\n')) != NULL)
                 break;
         }
     }
@@ -565,35 +565,35 @@ int quit(void)
 //Functions for wordlists
 int countries(void)
 {
-    file = fopen("listCountries.txt", "r");
+    file = fopen("lists\listCountries.txt", "r");
 }
 int movies(void)
 {
-    file = fopen("listMovies.txt", "r");
+    file = fopen("lists\listMovies.txt", "r");
 }
 int books(void)
 {
-    file = fopen("listBooks.txt", "r");
+    file = fopen("lists\listBooks.txt", "r");
 }
 int winter(void)
 {
-    file = fopen("listWinter.txt", "r");
+    file = fopen("lists/listWinter.txt", "r");
 }
 int animals(void)
 {
-    file = fopen("listAnimals.txt", "r");
+    file = fopen("lists\listAnimals.txt", "r");
 }
 int people(void)
 {
-    file = fopen("listPeople.txt", "r");
+    file = fopen("lists\listPeople.txt", "r");
 }
 int brands(void)
 {
-    file = fopen("listBrands.txt", "r");
+    file = fopen("lists\listBrands.txt", "r");
 }
 int hackathon(void)
 {
-    file = fopen("listHackathon.txt", "r");
+    file = fopen("lists\listHackathon.txt", "r");
 }
 
 //Kade Harmon
