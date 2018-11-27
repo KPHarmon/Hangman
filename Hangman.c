@@ -37,7 +37,7 @@ FILE* file;
 int main(void){
     system("cls");
     int mainInput;
-    printf("MAIN MENU:\n\n1:  PLAY\n2:  OPTIONS\n3:  HELP\n4:  QUIT\n");
+    printf("MAIN MENU:\n\n1:  PLAY\n2:  OPTIONS\n3:  QUIT\n");
     printf("____________   \n");
     printf("|         |    \n");
     printf("|         0    \n");
@@ -54,40 +54,38 @@ int main(void){
             difficultyLives = options();
             break;
         case 3:
-            help();
-            break;
-        case 4:
 	        return 0;
             break;
         default:
-            printf("\nCHOOSE 1, 2, 3, OR 4\n");
+            printf("\nCHOOSE 1, 2, 3\n");
             break;
     }
+	return 0;
 }
 
 //Single player game
 int playerOne(void){
     system("cls");
     srand((int)time(NULL));
-    int wordSize, i = 0, j=0, input, counter = 0, spaces = 0, catInput, calibrate = 0;
+	char line[256];
+	int flag1 = 0;
+    int i = 0, j = 0, input, counter = 0, spaces = 0, catInput, calibrate = 0;
     char blanks[30], guess, wrongChars[11] = "";
     int count = 0;
     int counterLives = difficultyLives;     //currentLives value will change throughout run, will grab the static
-                                    //counterLives value before each run(selected in options or by default)
+											//counterLives value before each run(selected in options or by default)
     //Category Selection
     printf("CHOOSE A CATEGORY:\n\n");
     printf("1.  ANIMALS\n");
     printf("2.  BOOKS\n");
     printf("3.  BRANDS\n");
     printf("4.  COUNTRIES\n");
-    printf("5.  HACKATHON\n");
-    printf("6.  MOVIES\n");
-    printf("7.  PEOPLE\n");
-    printf("8.  WINTER\n");
-    printf("--------------------\n");
-    printf("9.  PLAYER SELECTION\n");
+    printf("5.  MOVIES\n");
+    printf("6.  PEOPLE\n");
+    printf("7.  WINTER\n");
     scanf("%d", &catInput);
 
+	//set list path
     char path[30] = "";
     switch(catInput){
         case 1:
@@ -103,26 +101,21 @@ int playerOne(void){
             strcpy(path, "lists/listCountries.txt");
             break;
         case 5:
-            strcpy(path, "lists/listHackathonAnimals.txt");
-            break;
-        case 6:
             strcpy(path, "lists/listMovies.txt");
             break;
-        case 7:
+        case 6:
             strcpy(path, "lists/listPeople.txt");
             break;
-        case 8:
+        case 7:
             strcpy(path, "lists/listWinter.txt");
             break;
         dafault:
-            main();
-            break;
+			return 0;
     }
     
-    char line[256];
-    char wordOne[256];
-	//not true random, but good enough for a game
-    int randInt = rand()%140;
+	//Pick a 'random' line
+	char wordOne[256] = "";
+    int randInt = (rand()%66);
     FILE *file = fopen(path, "r");
     printf("%s", path);
     if(file == NULL)
@@ -138,23 +131,25 @@ int playerOne(void){
     fclose(file);
 
     //Store length of the found string
-   wordSize = strlen(wordOne) - 1;
+	int wordSize = strlen(wordOne) - 1;
 
     //Initialize array blanks with underscores or slashes if it finds a space
     for(i = 0; i < wordSize; i++){
         if(wordOne[i] == ' '){
         	blanks[i] = '/';
-		spaces++;
+			spaces++;
     	}else{
-		blanks[i] = '_';
+			blanks[i] = '_';
     	}
     }
 
     //While loop will continuously display updated loops until a person runs out of lives
     while(counterLives > 0){
-	int flag = 0;
+		int flag = 0;
         system("cls");
         
+		printf("WordOne: %s\nline: %d\n", wordOne, randInt);
+
         //Dislay number of lives
         printf(" LIVES: %d\n\n", counterLives);
         
@@ -175,45 +170,47 @@ int playerOne(void){
                 printf("\a");
                 blanks[i] = guess;
                 flag = 1;
-		counter++;
+				counter++;
             }
-	}
-        if(flag == 0){
-		counterLives--;
-		wrongChars[j] = guess;
-		j++;
-	}
+		}
+
+		//if not found, lose a life
+		if (flag == 0) {
+			counterLives--;
+			wrongChars[j] = guess;
+			j++;
+		}
        
-        //If the lives reaches zero display lose screen
-        if(counterLives == 0){
-            system("cls");
-            
-            //Display final Lives
-            printf(" LIVES: 0", counterLives);
-            printf("\n");
+		//Lose Screen
+		if (counterLives == 0) {
+			system("cls");
+
+			//Display final Lives
+			printf(" LIVES: 0", counterLives);
+			printf("\n");
+
+			//Display final blanks
+			for (i = 0; i < wordSize; i++)
+				printf(" %c", blanks[i]);
+
+			//Display final guesses
+			printf("\n\nWRONG GUESSES:\n");
+			for (i = 0; i < 9; i++) {
+				printf(" %c", wrongChars[i]);
+				printf("\n\n\nYOU LOSE, THE CORRECT ANSWER IS %s\n\n\nTYPE '1' TO PLAY AGAIN\nTYPE '2' TO RETURN TO MAIN MENU\n", wordOne);
+				scanf(" %d", &input);
+				switch (input) {
+				case 1:
+					playerOne();
+					return 0;
+				default:
+					main();
+					return 0;
+				}
+			}
+		}
         
-            //Display final blanks
-            for(i = 0; i < wordSize; i++)
-                printf(" %c", blanks[i]);
-            
-            //Display final guesses
-            printf("\n\nWRONG GUESSES:\n");
-            for(i = 0; i < 9; i++)
-                printf(" %c", wrongChars[i]);
-            
-            printf("\n\n\nYOU LOSE, THE CORRECT ANSWER IS %s\n\n\nTYPE '1' TO PLAY AGAIN\nTYPE '2' TO RETURN TO MAIN MENU\n", wordOne);
-            scanf(" %d", &input);
-            switch(input){
-                case 1:
-                    playerOne();
-                    break;
-                default:
-                    main();
-		    break;
-            }
-        }
-        
-        //If a person fills up blanks, while still having a life, display win screen
+        //Win Screen
         else if(counter == (wordSize-spaces)){
             system("cls");
             
@@ -232,18 +229,19 @@ int playerOne(void){
             
             //Display menu to play again or return to main menu
             printf("\n\nYOU WIN!");
-            printf("\n\nTYPE '1' TO PLAY AGAIN\nTYPE '2' TO RETURN TO MAIN MENU\n");
+            
+			printf("\n\nTYPE '1' TO PLAY AGAIN\nTYPE '2' TO RETURN TO MAIN MENU\n");
             scanf(" %d", &input);
             switch(input){
                 case 1:
                     playerOne();
-                    break;
+					return 0;
                 default:
                     main();
-                    break;
-           }
+					return 0;
+            }
     	}
-     }
+    }
 }
 
 //Options menu
@@ -270,40 +268,6 @@ int options(void){
 	    break;
     }
     return counterLives;
-}
-
-//Help menu
-int help(void){
-    char inputChar[10];
-    system("cls");
-    printf("\nHELP MENU:\n\n - PLAY INDIVIDUALLY OR IN A GROUP.\n\n - IF PLAYING IN A GROUP, SELECT A WORD (DON'T LET OTHERS SEE IT!).\n\n - TYPE A LETTER YOU THINK WILL BE FOUND IN THE WORD (REMEMBER TO IGNORE PUNCTUATION MARKS).\n\n - CONTINUE UNTIL THE WORD IS CORRECTLY GUESSED OR YOU RUN OUT OF LIVES!\n\n\n\n*TYPE A LETTER TO RETURN TO THE MAIN MENU*\n");
-    if(scanf(" %c", inputChar) != 0)
-        main();
-}
-
-void countries(){
-	FILE* file = fopen("lists\\listCountries.txt", "r");
-}
-void books(){
-	FILE* file = fopen("lists\\listCountries.txt", "r");
-}
-void movies(){
-	FILE* file = fopen("lists\\listCountries.txt", "r");
-}
-void winter(){
-	FILE* file = fopen("lists\\listCountries.txt", "r");
-}
-void animals(){
-	FILE* file = fopen("lists\\listCountries.txt", "r");
-}
-void hackathon(){
-	FILE* file = fopen("lists\\listCountries.txt", "r");
-}
-void brands(){
-	FILE* file = fopen("lists\\listCountries.txt", "r");
-}
-void people(){
-	FILE* file = fopen("lists\\listCountries.txt", "r");
 }
 
 
