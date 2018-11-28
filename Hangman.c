@@ -117,7 +117,6 @@ int playerOne(void){
 	char wordOne[256] = "";
     int randInt = (rand()%66);
     FILE *file = fopen(path, "r");
-    printf("%s", path);
     if(file == NULL)
         printf("\nfile not found\n");
     while (fgets(line, sizeof(line), file)) {
@@ -147,8 +146,6 @@ int playerOne(void){
     while(counterLives > 0){
 		int flag = 0;
         system("cls");
-        
-		printf("WordOne: %s\nline: %d\n", wordOne, randInt);
 
         //Dislay number of lives
         printf(" LIVES: %d\n\n", counterLives);
